@@ -3,7 +3,9 @@ package main
 import (
 	"log"
 	"os"
+	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/juancanchi/users/internal/delivery/http"
 	"github.com/juancanchi/users/internal/infrastructure/postgres"
@@ -27,6 +29,17 @@ func main() {
 	handler := http.NewUserHandler(uc)
 
 	r := gin.Default()
+
+	// 🛡️ Habilitar CORS para permitir conexión desde el frontend
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowMethods:     []string{"POST", "GET", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
+
+	// Rutas
 	r.POST("/register", handler.Register)
 	r.POST("/login", handler.Login)
 
