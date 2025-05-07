@@ -2,7 +2,7 @@ package postgres
 
 import (
 	"context"
-	"personal-jujuy/users/internal/domain"
+	"github.com/juancanchi/users/internal/domain"
 
 	"gorm.io/gorm"
 )

@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/juancanchi/users/internal/domain"
+	"github.com/juancanchi/users/internal/repository"
 	"golang.org/x/crypto/bcrypt"
-	"personal-jujuy/users/internal/domain"
-	"personal-jujuy/users/internal/repository"
 )
 
 type UserUsecase struct {

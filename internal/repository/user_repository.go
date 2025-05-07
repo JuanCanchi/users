@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"personal-jujuy/users/internal/domain"
+	"github.com/juancanchi/users/internal/domain"
 )
 
 type UserRepository interface {
