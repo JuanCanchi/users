@@ -7,8 +7,8 @@ import (
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
-	"users/internal/domain"
-	"users/internal/repository"
+	"personal-jujuy/users/internal/domain"
+	"personal-jujuy/users/internal/repository"
 )
 
 type UserUsecase struct {
