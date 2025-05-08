@@ -1,6 +1,7 @@
 package main
 
 import (
+	"gorm.io/gorm"
 	"log"
 	"os"
 	"time"
@@ -13,10 +14,15 @@ import (
 )
 
 func main() {
-	dsn := "host=localhost user=postgres password=postgres dbname=jujuy_market port=5432 sslmode=disable"
-	db, err := postgres.NewDB(dsn)
-	if err != nil {
-		log.Fatalf("DB error: %v", err)
+	dsn := os.Getenv("DB_DSN")
+	if dsn == "" {
+		dsn = "host=localhost user=postgres password=postgres dbname=jujuy_market port=5432 sslmode=disable"
+	}
+
+	var dbErr error
+	var db = tryConnectToDB(dsn, &dbErr)
+	if dbErr != nil {
+		log.Fatalf("❌ Error al conectar a la base de datos después de varios intentos: %v", dbErr)
 	}
 
 	repo := postgres.NewUserRepository(db)
@@ -50,4 +56,19 @@ func main() {
 
 	log.Printf("🧑‍💻 User service listening on http://localhost:%s", port)
 	r.Run(":" + port)
+}
+
+func tryConnectToDB(dsn string, lastErr *error) *gorm.DB {
+	const maxAttempts = 10
+	for i := 1; i <= maxAttempts; i++ {
+		log.Printf("⏳ Intentando conectar a la base de datos... intento %d/%d", i, maxAttempts)
+		db, err := postgres.NewDB(dsn)
+		if err == nil {
+			log.Println("✅ Conexión a la base de datos exitosa.")
+			return db
+		}
+		*lastErr = err
+		time.Sleep(3 * time.Second)
+	}
+	return nil
 }
