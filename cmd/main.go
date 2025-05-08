@@ -48,6 +48,7 @@ func main() {
 	// Rutas
 	r.POST("/register", handler.Register)
 	r.POST("/login", handler.Login)
+	r.PUT("/users/:id/role", handler.UpdateRole)
 
 	port := os.Getenv("PORT")
 	if port == "" {

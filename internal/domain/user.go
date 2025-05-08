@@ -7,4 +7,5 @@ type User struct {
 	Email     string    `json:"email"`
 	Password  string    `json:"-"` // no devolver nunca el hash
 	CreatedAt time.Time `json:"created_at"`
+	Role      string    `json:"role"`
 }

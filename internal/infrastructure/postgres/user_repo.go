@@ -27,3 +27,10 @@ func (r *UserRepository) FindByEmail(ctx context.Context, email string) (*domain
 	}
 	return &user, nil
 }
+
+func (r *UserRepository) UpdateRole(ctx context.Context, id string, role string) error {
+	return r.db.WithContext(ctx).
+		Model(&domain.User{}).
+		Where("id = ?", id).
+		Update("role", role).Error
+}

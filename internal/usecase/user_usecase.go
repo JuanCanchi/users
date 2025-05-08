@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"errors"
+	"github.com/juancanchi/users/internal/delivery/http/middleware"
 	"time"
 
 	"github.com/google/uuid"
@@ -65,10 +66,14 @@ func (u *UserUsecase) Login(ctx context.Context, email, password string) (string
 		return "", errors.New("credenciales inválidas")
 	}
 
-	token, err := GenerateJWT(user.ID, u.JWTSecret)
+	token, err := middleware.GenerateJWT(user, u.JWTSecret)
 	if err != nil {
 		return "", err
 	}
 
 	return token, nil
+}
+
+func (u *UserUsecase) UpdateUserRole(ctx context.Context, id string, role string) error {
+	return u.Repo.UpdateRole(ctx, id, role)
 }

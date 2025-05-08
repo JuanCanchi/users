@@ -57,3 +57,29 @@ func (h *UserHandler) Login(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"token": token})
 }
+
+func (h *UserHandler) UpdateRole(c *gin.Context) {
+	id := c.Param("id")
+
+	var body struct {
+		Role string `json:"role" binding:"required"`
+	}
+
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "rol requerido"})
+		return
+	}
+
+	if body.Role != "ADMIN" && body.Role != "USER" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "rol inválido"})
+		return
+	}
+
+	err := h.Usecase.UpdateUserRole(c.Request.Context(), id, body.Role)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "rol actualizado"})
+}
